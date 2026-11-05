@@ -1,0 +1,22 @@
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    container_name: n8n-chatbot-telegram
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    env_file:
+      - .env
+    environment:
+      - GENERIC_TIMEZONE=America/Sao_Paulo
+      - TZ=America/Sao_Paulo
+      # Permite que o nó HTTP Request leia {{ $env.OPENWEATHER_API_KEY }}
+      - N8N_BLOCK_ENV_ACCESS_IN_NODE=false
+      # URL pública (HTTPS) usada para registrar o webhook do Telegram Trigger
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+volumes:
+  n8n_data:
